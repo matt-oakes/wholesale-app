@@ -32,6 +32,17 @@
     "#tests/*": "./tests/*.js",
     "#config/*": "./config/*.js"
   },
+  "dependencies": {
+    "@adonisjs/auth": "^9.4.0",
+    "@adonisjs/bouncer": "^3.1.6",
+    "@adonisjs/core": "^6.18.0",
+    "@adonisjs/cors": "^2.2.1",
+    "@adonisjs/lucid": "^21.6.1",
+    "@vinejs/vine": "^3.0.1",
+    "luxon": "^3.7.2",
+    "pg": "^8.16.3",
+    "reflect-metadata": "^0.2.2"
+  },
   "devDependencies": {
     "@adonisjs/assembler": "^7.8.2",
     "@adonisjs/eslint-config": "^2.0.0",
@@ -52,16 +63,6 @@
     "prettier": "^3.5.3",
     "ts-node-maintained": "^10.9.5",
     "typescript": "~5.9.2"
-  },
-  "dependencies": {
-    "@adonisjs/auth": "^9.4.0",
-    "@adonisjs/core": "^6.18.0",
-    "@adonisjs/cors": "^2.2.1",
-    "@adonisjs/lucid": "^21.6.1",
-    "@vinejs/vine": "^3.0.1",
-    "luxon": "^3.7.2",
-    "pg": "^8.16.3",
-    "reflect-metadata": "^0.2.2"
   },
   "hotHook": {
     "boundaries": [
