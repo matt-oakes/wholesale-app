@@ -1,4 +1,5 @@
 import { assert } from '@japa/assert'
+import { expect } from '@japa/expect'
 import { apiClient } from '@japa/api-client'
 import app from '@adonisjs/core/services/app'
 import type { Config } from '@japa/runner/types'
@@ -13,7 +14,7 @@ import testUtils from '@adonisjs/core/services/test_utils'
  * Configure Japa plugins in the plugins array.
  * Learn more - https://japa.dev/docs/runner-config#plugins-optional
  */
-export const plugins: Config['plugins'] = [assert(), apiClient(), pluginAdonisJS(app)]
+export const plugins: Config['plugins'] = [assert(), expect(), apiClient(), pluginAdonisJS(app)]
 
 /**
  * Configure lifecycle function to run before and after all the
@@ -32,6 +33,13 @@ export const runnerHooks: Required<Pick<Config, 'setup' | 'teardown'>> = {
  * Learn more - https://japa.dev/docs/test-suites#lifecycle-hooks
  */
 export const configureSuite: Config['configureSuite'] = (suite) => {
+  // Migrate the database after each test
+  suite.onGroup((group) => {
+    group.each.setup(() => {
+      return testUtils.db().migrate()
+    })
+  })
+
   if (['browser', 'functional', 'e2e'].includes(suite.name)) {
     return suite.setup(() => testUtils.httpServer().start())
   }

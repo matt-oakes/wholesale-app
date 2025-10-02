@@ -36,6 +36,7 @@ const IMPORTER = (filePath: string) => {
 new Ignitor(APP_ROOT, { importer: IMPORTER })
   .tap((app) => {
     app.booting(async () => {
+      await import('#start/testcontainers')
       await import('#start/env')
     })
     app.listen('SIGTERM', () => app.terminate())
