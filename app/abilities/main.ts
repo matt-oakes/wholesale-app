@@ -1,1 +1,1 @@
-export const abilities = {}
+export const abilities = {};

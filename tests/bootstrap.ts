@@ -1,10 +1,10 @@
-import { assert } from '@japa/assert'
-import { expect } from '@japa/expect'
-import { apiClient } from '@japa/api-client'
-import app from '@adonisjs/core/services/app'
-import type { Config } from '@japa/runner/types'
-import { pluginAdonisJS } from '@japa/plugin-adonisjs'
-import testUtils from '@adonisjs/core/services/test_utils'
+import app from "@adonisjs/core/services/app";
+import testUtils from "@adonisjs/core/services/test_utils";
+import { apiClient } from "@japa/api-client";
+import { assert } from "@japa/assert";
+import { expect } from "@japa/expect";
+import { pluginAdonisJS } from "@japa/plugin-adonisjs";
+import type { Config } from "@japa/runner/types";
 
 /**
  * This file is imported by the "bin/test.ts" entrypoint file
@@ -14,7 +14,12 @@ import testUtils from '@adonisjs/core/services/test_utils'
  * Configure Japa plugins in the plugins array.
  * Learn more - https://japa.dev/docs/runner-config#plugins-optional
  */
-export const plugins: Config['plugins'] = [assert(), expect(), apiClient(), pluginAdonisJS(app)]
+export const plugins: Config["plugins"] = [
+  assert(),
+  expect(),
+  apiClient(),
+  pluginAdonisJS(app),
+];
 
 /**
  * Configure lifecycle function to run before and after all the
@@ -23,24 +28,24 @@ export const plugins: Config['plugins'] = [assert(), expect(), apiClient(), plug
  * The setup functions are executed before all the tests
  * The teardown functions are executed after all the tests
  */
-export const runnerHooks: Required<Pick<Config, 'setup' | 'teardown'>> = {
+export const runnerHooks: Required<Pick<Config, "setup" | "teardown">> = {
   setup: [],
   teardown: [],
-}
+};
 
 /**
  * Configure suites by tapping into the test suite instance.
  * Learn more - https://japa.dev/docs/test-suites#lifecycle-hooks
  */
-export const configureSuite: Config['configureSuite'] = (suite) => {
+export const configureSuite: Config["configureSuite"] = (suite) => {
   // Migrate the database after each test
   suite.onGroup((group) => {
     group.each.setup(() => {
-      return testUtils.db().migrate()
-    })
-  })
+      return testUtils.db().migrate();
+    });
+  });
 
-  if (['browser', 'functional', 'e2e'].includes(suite.name)) {
-    return suite.setup(() => testUtils.httpServer().start())
+  if (["browser", "functional", "e2e"].includes(suite.name)) {
+    return suite.setup(() => testUtils.httpServer().start());
   }
-}
+};

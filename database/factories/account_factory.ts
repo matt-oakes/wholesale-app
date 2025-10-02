@@ -1,13 +1,13 @@
-import factory from '@adonisjs/lucid/factories'
-import Account from '#models/account'
-import stringHelpers from '@adonisjs/core/helpers/string'
+import Account from "#models/account";
+import stringHelpers from "@adonisjs/core/helpers/string";
+import factory from "@adonisjs/lucid/factories";
 
 export const AccountFactory = factory
   .define(Account, async ({ faker }) => {
-    const name = faker.company.name()
+    const name = faker.company.name();
     return {
       name,
       slug: stringHelpers.camelCase(name).toLowerCase(),
-    }
+    };
   })
-  .build()
+  .build();

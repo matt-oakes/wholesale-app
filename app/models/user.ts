@@ -1,49 +1,49 @@
-import { DateTime } from 'luxon'
-import hash from '@adonisjs/core/services/hash'
-import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
-import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
-import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
-import Account from './account.js'
-import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import { DbAccessTokensProvider } from "@adonisjs/auth/access_tokens";
+import { withAuthFinder } from "@adonisjs/auth/mixins/lucid";
+import { compose } from "@adonisjs/core/helpers";
+import hash from "@adonisjs/core/services/hash";
+import { BaseModel, belongsTo, column } from "@adonisjs/lucid/orm";
+import type { BelongsTo } from "@adonisjs/lucid/types/relations";
+import { DateTime } from "luxon";
+import Account from "./account.js";
 
-const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
-  uids: ['email'],
-  passwordColumnName: 'password',
-})
+const AuthFinder = withAuthFinder(() => hash.use("scrypt"), {
+  uids: ["email"],
+  passwordColumnName: "password",
+});
 
-export type AccountRole = 'owner' | 'buyer'
+export type AccountRole = "owner" | "buyer";
 
 export default class User extends compose(BaseModel, AuthFinder) {
   @column({ isPrimary: true })
-  declare id: number
+  declare id: number;
 
   @column()
-  declare firstName: string
+  declare firstName: string;
 
   @column()
-  declare lastName: string
+  declare lastName: string;
 
   @column()
-  declare email: string
+  declare email: string;
 
   @column({ serializeAs: null })
-  declare password: string
+  declare password: string;
 
   @column()
-  declare accountId: number
+  declare accountId: number;
 
   @belongsTo(() => Account)
-  declare account: BelongsTo<typeof Account>
+  declare account: BelongsTo<typeof Account>;
 
   @column()
-  declare accountRole: AccountRole
+  declare accountRole: AccountRole;
 
   @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime
+  declare createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime | null
+  declare updatedAt: DateTime | null;
 
-  static accessTokens = DbAccessTokensProvider.forModel(User)
+  static accessTokens = DbAccessTokensProvider.forModel(User);
 }
