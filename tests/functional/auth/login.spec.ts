@@ -7,27 +7,45 @@ test.group('auth/login', () => {
     const response = await client.post('/auth/login').json({
       email: 'hello@mattoakes.net',
       password: 'password123',
-      // accountId is missing
+      // accountSlug is missing
     })
     response.assertUnprocessableEntity()
   })
 
-  test('error when the user does not exist', async ({ client }) => {
+  test('error when the account does not exist', async ({ client }) => {
     // Make the request
     const response = await client.post('/auth/login').json({
       email: 'hello@mattoakes.net',
       password: 'password123',
-      accountId: 1,
+      accountSlug: 'invalid',
     })
     response.assertBadRequest()
   })
 
   test('error when the user does not exist', async ({ client }) => {
+    const account = await AccountFactory.create()
+
     // Make the request
     const response = await client.post('/auth/login').json({
       email: 'hello@mattoakes.net',
       password: 'password123',
-      accountId: 1,
+      accountSlug: account.slug,
+    })
+    response.assertBadRequest()
+  })
+
+  test('error when the user exists but the password is incorrect', async ({ client }) => {
+    const account = await AccountFactory.create()
+    const user = await UserFactory.merge({
+      accountId: account.id,
+      password: 'password123',
+    }).create()
+
+    // Make the request
+    const response = await client.post('/auth/login').json({
+      email: user.email,
+      password: 'invalidpassword',
+      accountSlug: account.slug,
     })
     response.assertBadRequest()
   })
@@ -43,7 +61,7 @@ test.group('auth/login', () => {
     const response = await client.post('/auth/login').json({
       email: user.email,
       password: 'password123',
-      accountId: accounts[0].id,
+      accountSlug: accounts[0].slug,
     })
     response.assertBadRequest()
   })
@@ -59,7 +77,7 @@ test.group('auth/login', () => {
     const response = await client.post('/auth/login').json({
       email: user.email,
       password: 'password123',
-      accountId: account.id,
+      accountSlug: account.slug,
     })
     response.assertOk()
 

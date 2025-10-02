@@ -8,6 +8,9 @@ export default class Account extends BaseModel {
   declare id: number
 
   @column()
+  declare slug: string
+
+  @column()
   declare name: string
 
   @hasMany(() => User)

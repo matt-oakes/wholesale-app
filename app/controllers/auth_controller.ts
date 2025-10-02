@@ -11,13 +11,16 @@ export default class AuthController {
    */
   async register({ auth, request }: HttpContext) {
     // Validate and get the payload
-    const { accountName, firstName, lastName, email, password } =
+    const { accountSlug, accountName, firstName, lastName, email, password } =
       await request.validateUsing(authRegisterValidator)
 
     // With a transaction create the account and owner user
     const newData = await db.transaction(async (transaction) => {
       // Create an account
-      const account = await Account.create({ name: accountName }, { client: transaction })
+      const account = await Account.create(
+        { slug: accountSlug, name: accountName },
+        { client: transaction }
+      )
 
       // Create a user as the account owner
       const user = await account
@@ -42,12 +45,18 @@ export default class AuthController {
    * Login with an existing user
    */
   async login({ request, response }: HttpContext) {
-    const { email, password, accountId } = await request.validateUsing(authLoginValidator)
+    const { email, password, accountSlug } = await request.validateUsing(authLoginValidator)
+
+    // Get the account
+    const account = await Account.findBy({ slug: accountSlug })
+    if (!account) {
+      return response.abort('Invalid credentials')
+    }
 
     // TODO: This code is prone to timing attacks where it can be used to discover if a user with a given email exists.
     // This should be replaced with the `User.verifyCredentials` method, however, this currently does not work with
     // our scheme which email and accountId combinations are unique rather than just emails.
-    const user = await User.findBy({ email, accountId })
+    const user = await User.findBy({ email, accountId: account.id })
     if (!user) {
       return response.abort('Invalid credentials')
     }
@@ -55,9 +64,6 @@ export default class AuthController {
     if (!isPasswordValid) {
       return response.abort('Invalid credentials')
     }
-
-    // Get the account data
-    const account = await Account.findOrFail(accountId)
 
     // Create a new token
     const token = await User.accessTokens.create(user)

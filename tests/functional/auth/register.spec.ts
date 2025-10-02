@@ -9,6 +9,7 @@ test.group('auth/register', () => {
       lastName: 'Oakes',
       email: 'hello@mattoakes.net',
       password: 'password123',
+      // accountSlug is missing
       // accountName is missing
     })
     response.assertUnprocessableEntity()
@@ -24,6 +25,7 @@ test.group('auth/register', () => {
       lastName: 'Oakes',
       email: 'hello@mattoakes.net',
       password: 'password123',
+      accountSlug: 'examplestore',
       accountName: 'Example Store',
     })
     response.assertOk()
@@ -40,6 +42,7 @@ test.group('auth/register', () => {
       }),
       account: expect.objectContaining({
         id: expect.any(Number),
+        slug: 'examplestore',
         name: 'Example Store',
       }),
     })
@@ -48,6 +51,7 @@ test.group('auth/register', () => {
     const account = await Account.find(body.account.id)
     expect(account?.toJSON()).toMatchObject({
       id: body.account.id,
+      slug: 'examplestore',
       name: 'Example Store',
     })
 
