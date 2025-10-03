@@ -30,6 +30,10 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column({ serializeAs: null })
   declare password: string;
 
+  /**
+   * Relations
+   */
+
   @column()
   declare accountId: number;
 
@@ -39,11 +43,19 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare accountRole: AccountRole;
 
+  /**
+   * Meta
+   */
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null;
+
+  /**
+   * Static
+   */
 
   static accessTokens = DbAccessTokensProvider.forModel(User);
 }

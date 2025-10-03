@@ -1,0 +1,64 @@
+import { AccountFactory } from "#database/factories/account_factory";
+import User from "#models/user";
+import { test } from "@japa/runner";
+
+test.group("products", () => {
+  test("error when not authenticated", async ({ client }) => {
+    const response = await client.get("/products");
+    response.assertUnauthorized();
+  });
+
+  test("error when passing invalid auth token", async ({ client }) => {
+    const response = await client.get("/products").headers({
+      Authorization: "Bearer invalid-token",
+    });
+    response.assertUnauthorized();
+  });
+
+  test("empty array when there are no products for the account", async ({
+    client,
+    expect,
+  }) => {
+    // The account the user does have access to has no products
+    const account1 = await AccountFactory.with("users", 1).create();
+
+    // Create another account which the user does not have access to with products
+    await AccountFactory.with("users", 1).with("products", 5).create();
+
+    const account1User = await account1.related("users").query().firstOrFail();
+    const account1UserToken = await User.accessTokens.create(account1User);
+    const response = await client.get("/products").headers({
+      Authorization: `Bearer ${account1UserToken.value!.release()}`,
+    });
+    response.assertOk();
+
+    expect(response.body()).toEqual({
+      products: [],
+    });
+  });
+
+  test("an array with the products for the account", async ({
+    client,
+    expect,
+  }) => {
+    // The account the user does have access to has no products
+    const account1 = await AccountFactory.with("users", 1)
+      .with("products", 3)
+      .create();
+
+    // Create another account which the user does not have access to with products
+    await AccountFactory.with("users", 1).with("products", 5).create();
+
+    const account1User = await account1.related("users").query().firstOrFail();
+    const account1UserToken = await User.accessTokens.create(account1User);
+    const response = await client.get("/products").headers({
+      Authorization: `Bearer ${account1UserToken.value!.release()}`,
+    });
+    response.assertOk();
+
+    const account1Products = await account1.related("products").query();
+    expect(response.body()).toEqual({
+      products: account1Products.map((c) => c.toJSON()),
+    });
+  });
+});
