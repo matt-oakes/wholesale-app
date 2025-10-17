@@ -2,6 +2,7 @@ import { BaseSchema } from "@adonisjs/lucid/schema";
 
 export default class extends BaseSchema {
   protected accountsTableName = "accounts";
+  protected customersTableName = "customers";
   protected usersTableName = "users";
 
   async up() {
@@ -9,6 +10,23 @@ export default class extends BaseSchema {
       table.increments("id").notNullable().primary();
       table.string("slug").notNullable();
       table.string("name").notNullable();
+
+      table.timestamp("created_at").notNullable();
+      table.timestamp("updated_at").nullable();
+    });
+
+    this.schema.createTable(this.customersTableName, (table) => {
+      table.increments("id").notNullable().primary();
+      table.string("name").notNullable();
+      table.string("billing_email").notNullable();
+
+      table
+        .integer("account_id")
+        .notNullable()
+        .unsigned()
+        .references("id")
+        .inTable(this.accountsTableName)
+        .onDelete("CASCADE");
 
       table.timestamp("created_at").notNullable();
       table.timestamp("updated_at").nullable();
@@ -28,7 +46,13 @@ export default class extends BaseSchema {
         .references("id")
         .inTable(this.accountsTableName)
         .onDelete("CASCADE");
-      table.enum("account_role", ["owner", "buyer"]).notNullable();
+      table
+        .integer("customer_id")
+        .nullable()
+        .unsigned()
+        .references("id")
+        .inTable(this.customersTableName)
+        .onDelete("CASCADE");
 
       table.timestamp("created_at").notNullable();
       table.timestamp("updated_at").nullable();
@@ -38,7 +62,8 @@ export default class extends BaseSchema {
   }
 
   async down() {
-    this.schema.dropTable(this.usersTableName);
-    this.schema.dropTable(this.accountsTableName);
+    this.schema.dropTableIfExists(this.usersTableName);
+    this.schema.dropTableIfExists(this.customersTableName);
+    this.schema.dropTableIfExists(this.accountsTableName);
   }
 }

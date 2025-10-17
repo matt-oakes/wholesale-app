@@ -67,8 +67,8 @@ export default class extends BaseSchema {
   }
 
   async down() {
-    this.schema.dropTable(this.pivotTableName);
-    this.schema.dropTable(this.productsTableName);
-    this.schema.dropTable(this.categoriesTableName);
+    this.schema.dropTableIfExists(this.pivotTableName);
+    this.schema.dropTableIfExists(this.productsTableName);
+    this.schema.dropTableIfExists(this.categoriesTableName);
   }
 }

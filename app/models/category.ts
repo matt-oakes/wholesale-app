@@ -49,7 +49,7 @@ export default class Category extends BaseModel {
    */
 
   static visibleTo = scope((query, user: User) => {
-    // Users can only see cateogires which are part of their account
+    // Users can only see categories which are part of their account
     query.where("accountId", user.accountId);
   });
 }

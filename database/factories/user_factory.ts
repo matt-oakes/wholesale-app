@@ -10,7 +10,6 @@ export const UserFactory = factory
       firstName,
       lastName,
       email: faker.internet.email({ firstName, lastName }),
-      accountRole: "owner" as const,
       password: faker.internet.password(),
     };
   })

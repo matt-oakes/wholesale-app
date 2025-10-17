@@ -14,7 +14,7 @@ export default class CategoriesController {
   }
 
   /**
-   * Returns a single cateogry
+   * Returns a single category
    */
   show() {
     // TODO: Implement

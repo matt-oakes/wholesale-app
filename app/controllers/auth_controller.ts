@@ -26,7 +26,7 @@ export default class AuthController {
       const user = await account
         .related("users")
         .create(
-          { firstName, lastName, email, password, accountRole: "owner" },
+          { firstName, lastName, email, password },
           { client: transaction },
         );
 

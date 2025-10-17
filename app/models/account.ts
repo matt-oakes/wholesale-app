@@ -2,6 +2,7 @@ import { BaseModel, column, hasMany } from "@adonisjs/lucid/orm";
 import type { HasMany } from "@adonisjs/lucid/types/relations";
 import { DateTime } from "luxon";
 import Category from "./category.js";
+import Customer from "./customer.js";
 import Product from "./product.js";
 import User from "./user.js";
 
@@ -21,6 +22,9 @@ export default class Account extends BaseModel {
 
   @hasMany(() => Category)
   declare categories: HasMany<typeof Category>;
+
+  @hasMany(() => Customer)
+  declare customers: HasMany<typeof Customer>;
 
   @hasMany(() => Product)
   declare products: HasMany<typeof Product>;
