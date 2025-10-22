@@ -1,5 +1,7 @@
 import User from "#models/user";
 import factory from "@adonisjs/lucid/factories";
+import { AccountFactory } from "./account_factory.js";
+import { CustomerFactory } from "./customer_factory.js";
 
 export const UserFactory = factory
   .define(User, async ({ faker }) => {
@@ -13,4 +15,6 @@ export const UserFactory = factory
       password: faker.internet.password(),
     };
   })
+  .relation("account", () => AccountFactory)
+  .relation("customer", () => CustomerFactory)
   .build();

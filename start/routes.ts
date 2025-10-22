@@ -13,6 +13,7 @@ import { middleware } from "./kernel.js";
 const AuthController = () => import("#controllers/auth_controller");
 const AccountController = () => import("#controllers/account_controller");
 const CategoriesController = () => import("#controllers/categories_controller");
+const OrdersController = () => import("#controllers/orders_controller");
 const ProductsController = () => import("#controllers/products_controller");
 const UserController = () => import("#controllers/users_controller");
 
@@ -41,6 +42,18 @@ router
     router.get("/:categoryId", [CategoriesController, "show"]);
   })
   .prefix("categories")
+  .use(middleware.auth());
+
+/**
+ * Orders routes
+ */
+
+router
+  .group(() => {
+    router.get("", [OrdersController, "index"]);
+    router.get("/:orderId", [OrdersController, "show"]);
+  })
+  .prefix("orders")
   .use(middleware.auth());
 
 /**

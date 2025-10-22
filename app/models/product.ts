@@ -35,7 +35,6 @@ export default class Product extends BaseModel {
 
   @column()
   declare accountId: number;
-
   @belongsTo(() => Account)
   declare account: BelongsTo<typeof Account>;
 

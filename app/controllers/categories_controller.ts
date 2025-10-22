@@ -18,7 +18,7 @@ export default class CategoriesController {
    */
   show() {
     // TODO: Implement
-    // // TODO: Functional tests
+    // TODO: Functional tests
   }
 
   // TODO: Implement creating, updating, and deleting

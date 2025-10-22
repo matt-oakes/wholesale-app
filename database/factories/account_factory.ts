@@ -3,6 +3,7 @@ import stringHelpers from "@adonisjs/core/helpers/string";
 import factory from "@adonisjs/lucid/factories";
 import { CategoryFactory } from "./category_factory.js";
 import { CustomerFactory } from "./customer_factory.js";
+import { OrderFactory } from "./order_factory.js";
 import { ProductFactory } from "./product_factory.js";
 import { UserFactory } from "./user_factory.js";
 
@@ -16,6 +17,7 @@ export const AccountFactory = factory
   })
   .relation("categories", () => CategoryFactory)
   .relation("customers", () => CustomerFactory)
+  .relation("orders", () => OrderFactory)
   .relation("products", () => ProductFactory)
   .relation("users", () => UserFactory)
   .build();

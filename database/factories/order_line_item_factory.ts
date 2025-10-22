@@ -1,10 +1,9 @@
-import Product from "#models/product";
+import OrderLineItem from "#models/order_line_item";
 import factory from "@adonisjs/lucid/factories";
-import { AccountFactory } from "./account_factory.js";
-import { CategoryFactory } from "./category_factory.js";
+import { OrderFactory } from "./order_factory.js";
 
-export const ProductFactory = factory
-  .define(Product, async ({ faker }) => {
+export const OrderLineItemFactory = factory
+  .define(OrderLineItem, async ({ faker }) => {
     const priceRetail = Math.round(
       Number.parseFloat(faker.commerce.price()) * 100,
     );
@@ -13,8 +12,8 @@ export const ProductFactory = factory
       priceWholesale: Math.round(priceRetail / 2.2),
       priceRetail,
       imageUrls: [faker.image.urlPicsumPhotos({ width: 1000, height: 1000 })],
+      categories: [faker.commerce.department()],
     };
   })
-  .relation("account", () => AccountFactory)
-  .relation("categories", () => CategoryFactory)
+  .relation("order", () => OrderFactory)
   .build();

@@ -1,7 +1,8 @@
-import { BaseModel, belongsTo, column } from "@adonisjs/lucid/orm";
-import type { BelongsTo } from "@adonisjs/lucid/types/relations";
+import { BaseModel, belongsTo, column, hasMany } from "@adonisjs/lucid/orm";
+import type { BelongsTo, HasMany } from "@adonisjs/lucid/types/relations";
 import { DateTime } from "luxon";
 import Account from "./account.js";
+import Order from "./order.js";
 
 export default class Customer extends BaseModel {
   @column({ isPrimary: true })
@@ -21,6 +22,9 @@ export default class Customer extends BaseModel {
   declare accountId: number;
   @belongsTo(() => Account)
   declare account: BelongsTo<typeof Account>;
+
+  @hasMany(() => Order)
+  declare orders: HasMany<typeof Order>;
 
   /**
    * Meta
