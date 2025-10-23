@@ -79,6 +79,8 @@ test.group("auth/login", () => {
       accountId: account.id,
       password: "password123",
     }).create();
+    await user.load("account");
+    await user.load("customer");
 
     // Make the request
     const response = await client.post("/auth/login").json({
@@ -93,7 +95,6 @@ test.group("auth/login", () => {
     expect(body).toMatchObject({
       token: expect.any(String),
       user: user.toJSON(),
-      account: account.toJSON(),
     });
   });
 });

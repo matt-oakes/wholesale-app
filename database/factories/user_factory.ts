@@ -13,6 +13,7 @@ export const UserFactory = factory
       lastName,
       email: faker.internet.email({ firstName, lastName }),
       password: faker.internet.password(),
+      customerId: null,
     };
   })
   .relation("account", () => AccountFactory)

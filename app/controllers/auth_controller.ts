@@ -15,7 +15,7 @@ export default class AuthController {
       await request.validateUsing(authRegisterValidator);
 
     // With a transaction create the account and owner user
-    const newData = await db.transaction(async (transaction) => {
+    const user = await db.transaction(async (transaction) => {
       // Create an account
       const account = await Account.create(
         { slug: accountSlug, name: accountName },
@@ -23,22 +23,23 @@ export default class AuthController {
       );
 
       // Create a user as the account owner
-      const user = await account
+      return account
         .related("users")
         .create(
-          { firstName, lastName, email, password },
+          { firstName, lastName, email, password, customerId: null },
           { client: transaction },
         );
-
-      return { account, user };
     });
-    const { account, user } = newData;
 
     // Create a new token for a user
     const token = await auth.use("api").createToken(user);
 
+    // Load the users account and custom information
+    await user.loadOnce("account");
+    await user.loadOnce("customer");
+
     // Return the data
-    return { account, user, token: token.value!.release() };
+    return { user, token: token.value!.release() };
   }
 
   /**
@@ -69,16 +70,34 @@ export default class AuthController {
     // Create a new token
     const token = await User.accessTokens.create(user);
 
+    // Load the users account and custom information
+    await user.loadOnce("account");
+    await user.loadOnce("customer");
+
     // Return the data
-    return { account, user, token: token.value!.release() };
+    return { user, token: token.value!.release() };
   }
 
   /**
    * Logout with the current user token
    */
-  async logout({ auth, response }: HttpContext) {
+  async logout({ auth }: HttpContext) {
     await auth.authenticate();
     await auth.use("api").invalidateToken();
-    return response.ok("Logged out");
+
+    return { success: true, message: "Logged out" };
+  }
+
+  /**
+   * Get the current users information
+   */
+  async me({ auth }: HttpContext) {
+    const user = await auth.authenticate();
+
+    // Load the users account and custom information
+    await user.loadOnce("account");
+    await user.loadOnce("customer");
+
+    return { user };
   }
 }

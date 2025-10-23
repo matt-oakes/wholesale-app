@@ -39,18 +39,18 @@ test.group("auth/register", () => {
         firstName: "Matt",
         lastName: "Oakes",
         email: "hello@mattoakes.net",
-      }),
-      account: expect.objectContaining({
-        id: expect.any(String),
-        slug: "examplestore",
-        name: "Example Store",
+        account: expect.objectContaining({
+          id: expect.any(String),
+          slug: "examplestore",
+          name: "Example Store",
+        }),
       }),
     });
 
     // Ensure the account exists
-    const account = await Account.find(body.account.id);
+    const account = await Account.find(body.user.accountId);
     expect(account?.toJSON()).toMatchObject({
-      id: body.account.id,
+      id: body.user.accountId,
       slug: "examplestore",
       name: "Example Store",
     });
@@ -58,7 +58,7 @@ test.group("auth/register", () => {
     // Ensure the user exists
     const user = await User.findBy({
       email: "hello@mattoakes.net",
-      accountId: body.account.id,
+      accountId: body.user.accountId,
     });
     expect(user?.toJSON()).toMatchObject({
       id: body.user.id,
