@@ -17,7 +17,7 @@ export type AccountRole = "customer" | "manager";
 
 export default class User extends compose(BaseModel, AuthFinder) {
   @column({ isPrimary: true })
-  declare id: number;
+  declare id: string;
 
   @column()
   declare firstName: string;
@@ -36,12 +36,12 @@ export default class User extends compose(BaseModel, AuthFinder) {
    */
 
   @column()
-  declare accountId: number;
+  declare accountId: string;
   @belongsTo(() => Account)
   declare account: BelongsTo<typeof Account>;
 
   @column()
-  declare customerId: number | null;
+  declare customerId: string | null;
   @belongsTo(() => Customer)
   declare customer: BelongsTo<typeof Customer>;
 

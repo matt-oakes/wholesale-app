@@ -5,7 +5,7 @@ import Order from "./order.js";
 
 export default class OrderLineItem extends BaseModel {
   @column({ isPrimary: true })
-  declare id: number;
+  declare id: string;
 
   @column()
   declare name: string;
@@ -34,7 +34,7 @@ export default class OrderLineItem extends BaseModel {
    */
 
   @column()
-  declare orderId: number;
+  declare orderId: string;
   @belongsTo(() => Order)
   declare order: BelongsTo<typeof Order>;
 

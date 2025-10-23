@@ -35,13 +35,13 @@ test.group("auth/register", () => {
     expect(body).toMatchObject({
       token: expect.any(String),
       user: expect.objectContaining({
-        id: expect.any(Number),
+        id: expect.any(String),
         firstName: "Matt",
         lastName: "Oakes",
         email: "hello@mattoakes.net",
       }),
       account: expect.objectContaining({
-        id: expect.any(Number),
+        id: expect.any(String),
         slug: "examplestore",
         name: "Example Store",
       }),

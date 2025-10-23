@@ -14,7 +14,7 @@ import User from "./user.js";
 
 export default class Order extends BaseModel {
   @column({ isPrimary: true })
-  declare id: number;
+  declare id: string;
 
   @column()
   declare customerName: string;
@@ -30,12 +30,12 @@ export default class Order extends BaseModel {
    */
 
   @column()
-  declare accountId: number;
+  declare accountId: string;
   @belongsTo(() => Account)
   declare account: BelongsTo<typeof Account>;
 
   @column()
-  declare customerId: number | null;
+  declare customerId: string | null;
   @belongsTo(() => Customer)
   declare customer: BelongsTo<typeof Customer> | null;
 

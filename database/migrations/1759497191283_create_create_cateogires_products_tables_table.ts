@@ -8,12 +8,16 @@ export default class extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.categoriesTableName, (table) => {
-      table.increments("id").notNullable().primary();
+      table
+        .text("id")
+        .notNullable()
+        .primary()
+        .defaultTo(this.raw("nanoid('cat_')"));
       table.text("name").notNullable();
       table.integer("order").notNullable().unsigned();
 
       table
-        .integer("account_id")
+        .text("account_id")
         .notNullable()
         .unsigned()
         .references("id")
@@ -25,16 +29,19 @@ export default class extends BaseSchema {
     });
 
     this.schema.createTable(this.productsTableName, (table) => {
-      table.increments("id").notNullable().primary();
+      table
+        .text("id")
+        .notNullable()
+        .primary()
+        .defaultTo(this.raw("nanoid('prd_')"));
       table.text("name").notNullable();
       table.integer("price_wholesale").unsigned().notNullable();
       table.integer("price_retail").unsigned().notNullable();
       table.json("image_urls").notNullable();
 
       table
-        .integer("account_id")
+        .text("account_id")
         .notNullable()
-        .unsigned()
         .references("id")
         .inTable(this.accountsTableName)
         .onDelete("CASCADE");
@@ -47,14 +54,14 @@ export default class extends BaseSchema {
       table.increments("id").primary();
 
       table
-        .integer("category_id")
-        .unsigned()
+        .text("category_id")
+        .notNullable()
         .references("id")
         .inTable(this.categoriesTableName)
         .onDelete("CASCADE");
       table
-        .integer("product_id")
-        .unsigned()
+        .text("product_id")
+        .notNullable()
         .references("id")
         .inTable(this.productsTableName)
         .onDelete("CASCADE");

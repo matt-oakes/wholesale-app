@@ -6,7 +6,7 @@ import Order from "./order.js";
 
 export default class Customer extends BaseModel {
   @column({ isPrimary: true })
-  declare id: number;
+  declare id: string;
 
   @column()
   declare name: string;
@@ -19,7 +19,7 @@ export default class Customer extends BaseModel {
    */
 
   @column()
-  declare accountId: number;
+  declare accountId: string;
   @belongsTo(() => Account)
   declare account: BelongsTo<typeof Account>;
 

@@ -9,7 +9,7 @@ import User from "./user.js";
 
 export default class Account extends BaseModel {
   @column({ isPrimary: true })
-  declare id: number;
+  declare id: string;
 
   @column()
   declare slug: string;

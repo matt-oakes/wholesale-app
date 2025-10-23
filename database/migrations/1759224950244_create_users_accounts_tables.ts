@@ -7,7 +7,11 @@ export default class extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.accountsTableName, (table) => {
-      table.increments("id").notNullable().primary();
+      table
+        .text("id")
+        .notNullable()
+        .primary()
+        .defaultTo(this.raw("nanoid('acc_')"));
       table.string("slug").notNullable();
       table.string("name").notNullable();
 
@@ -16,14 +20,17 @@ export default class extends BaseSchema {
     });
 
     this.schema.createTable(this.customersTableName, (table) => {
-      table.increments("id").notNullable().primary();
+      table
+        .text("id")
+        .notNullable()
+        .primary()
+        .defaultTo(this.raw("nanoid('cus_')"));
       table.string("name").notNullable();
       table.string("billing_email").notNullable();
 
       table
-        .integer("account_id")
+        .text("account_id")
         .notNullable()
-        .unsigned()
         .references("id")
         .inTable(this.accountsTableName)
         .onDelete("CASCADE");
@@ -33,23 +40,25 @@ export default class extends BaseSchema {
     });
 
     this.schema.createTable(this.usersTableName, (table) => {
-      table.increments("id").notNullable();
+      table
+        .text("id")
+        .notNullable()
+        .primary()
+        .defaultTo(this.raw("nanoid('usr_')"));
       table.string("first_name").notNullable();
       table.string("last_name").notNullable();
       table.string("email").notNullable();
       table.string("password").notNullable();
 
       table
-        .integer("account_id")
+        .text("account_id")
         .notNullable()
-        .unsigned()
         .references("id")
         .inTable(this.accountsTableName)
         .onDelete("CASCADE");
       table
-        .integer("customer_id")
+        .text("customer_id")
         .nullable()
-        .unsigned()
         .references("id")
         .inTable(this.customersTableName)
         .onDelete("CASCADE");

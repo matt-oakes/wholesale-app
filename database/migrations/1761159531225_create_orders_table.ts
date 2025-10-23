@@ -6,23 +6,25 @@ export default class extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.ordersTableName, (table) => {
-      table.increments("id");
+      table
+        .text("id")
+        .notNullable()
+        .primary()
+        .defaultTo(this.raw("nanoid('ord_')"));
 
       table.text("customer_name").notNullable();
       table.text("customer_address").notNullable();
       table.text("customer_email").notNullable();
 
       table
-        .integer("account_id")
+        .text("account_id")
         .notNullable()
-        .unsigned()
         .references("id")
         .inTable("accounts")
         .onDelete("CASCADE");
       table
-        .integer("customer_id")
+        .text("customer_id")
         .nullable()
-        .unsigned()
         .references("id")
         .inTable("customers")
         .onDelete("CASCADE");
@@ -32,7 +34,11 @@ export default class extends BaseSchema {
     });
 
     this.schema.createTable(this.orderLineItemTableName, (table) => {
-      table.increments("id");
+      table
+        .text("id")
+        .notNullable()
+        .primary()
+        .defaultTo(this.raw("nanoid('oli_')"));
 
       table.text("name").notNullable();
       table.integer("price_wholesale").unsigned().notNullable();
@@ -42,9 +48,8 @@ export default class extends BaseSchema {
       table.json("categories").notNullable();
 
       table
-        .integer("order_id")
+        .text("order_id")
         .notNullable()
-        .unsigned()
         .references("id")
         .inTable(this.ordersTableName)
         .onDelete("CASCADE");
