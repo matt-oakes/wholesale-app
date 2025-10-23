@@ -11,11 +11,10 @@ import router from "@adonisjs/core/services/router";
 import { middleware } from "./kernel.js";
 
 const AuthController = () => import("#controllers/auth_controller");
-const AccountController = () => import("#controllers/account_controller");
+const AccountsController = () => import("#controllers/accounts_controller");
 const CategoriesController = () => import("#controllers/categories_controller");
 const OrdersController = () => import("#controllers/orders_controller");
 const ProductsController = () => import("#controllers/products_controller");
-const UserController = () => import("#controllers/users_controller");
 
 /**
  * Auth routes used to create accounts, login, and logout
@@ -30,45 +29,39 @@ router
   .prefix("auth");
 
 /**
- * Account routes
- */
-router.get("account", [AccountController, "index"]);
-
-/**
- * Categories routes
+ * Account-specific routes
  */
 router
   .group(() => {
-    router.get("", [CategoriesController, "index"]);
-    router.get("/:categoryId", [CategoriesController, "show"]);
+    // Account routes
+    router.get("", [AccountsController, "show"]);
+
+    // Categories routes
+    router
+      .group(() => {
+        router.get("", [CategoriesController, "index"]);
+        router.get("/:categoryId", [CategoriesController, "show"]);
+      })
+      .prefix("categories");
+
+    // Orders routes
+    // TODO: Implement
+    // TODO: Functional tests
+    router
+      .group(() => {
+        router.get("", [OrdersController, "index"]);
+        router.get("/:orderId", [OrdersController, "show"]);
+      })
+      .prefix("orders");
+
+    // Products
+    router
+      .group(() => {
+        router.get("", [ProductsController, "index"]);
+        router.get("/:productId", [ProductsController, "show"]);
+      })
+      .prefix("products");
   })
-  .prefix("categories")
-  .use(middleware.auth());
-
-/**
- * Orders routes
- */
-
-router
-  .group(() => {
-    router.get("", [OrdersController, "index"]);
-    router.get("/:orderId", [OrdersController, "show"]);
-  })
-  .prefix("orders")
-  .use(middleware.auth());
-
-/**
- * Products routes
- */
-router
-  .group(() => {
-    router.get("", [ProductsController, "index"]);
-    router.get("/:productId", [ProductsController, "show"]);
-  })
-  .prefix("products")
-  .use(middleware.auth());
-
-/**
- * User routes
- */
-router.get("user", [UserController, "index"]);
+  .prefix("accounts/:accountId")
+  .use(middleware.auth())
+  .use(middleware.accountAccess());

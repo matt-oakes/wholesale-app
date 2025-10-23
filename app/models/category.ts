@@ -9,7 +9,6 @@ import type { BelongsTo, ManyToMany } from "@adonisjs/lucid/types/relations";
 import { DateTime } from "luxon";
 import Account from "./account.js";
 import Product from "./product.js";
-import User from "./user.js";
 
 export default class Category extends BaseModel {
   @column({ isPrimary: true })
@@ -47,8 +46,7 @@ export default class Category extends BaseModel {
    * Static
    */
 
-  static visibleTo = scope((query, user: User) => {
-    // Users can only see categories which are part of their account
-    query.where("accountId", user.accountId);
+  static partOfAccount = scope((query, accountId: string) => {
+    query.where("accountId", accountId);
   });
 }
