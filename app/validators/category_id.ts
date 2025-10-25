@@ -6,6 +6,4 @@ export const categoryIdSchema = vine.object({
   categoryId: vine.string(),
 });
 
-export const categoryIdParamsValidator = vine.compile(
-  categoryIdSchema.clone().allowUnknownProperties(),
-);
+export const categoryIdParamsValidator = vine.compile(categoryIdSchema.clone());

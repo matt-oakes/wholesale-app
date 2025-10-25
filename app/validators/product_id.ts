@@ -6,6 +6,4 @@ export const productIdSchema = vine.object({
   productId: vine.string(),
 });
 
-export const productIdParamsValidator = vine.compile(
-  productIdSchema.clone().allowUnknownProperties(),
-);
+export const productIdParamsValidator = vine.compile(productIdSchema.clone());

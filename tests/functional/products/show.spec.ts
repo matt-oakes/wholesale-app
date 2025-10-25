@@ -47,7 +47,7 @@ test.group("products/show", () => {
       .get(`/accounts/${account2.id}/products/${product2.id}`)
       .headers({ Authorization: `Bearer ${account1UserTokenString}` });
 
-    response.assertUnauthorized();
+    response.assertForbidden();
   });
 
   test("error when the requested product id doesn't exist on the given account", async ({

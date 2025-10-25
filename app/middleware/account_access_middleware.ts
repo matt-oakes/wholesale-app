@@ -1,5 +1,4 @@
 import { accountIdParamsValidator } from "#validators/account_id";
-import { errors } from "@adonisjs/auth";
 import { type HttpContext } from "@adonisjs/core/http";
 import type { NextFn } from "@adonisjs/core/types/http";
 
@@ -8,14 +7,12 @@ import type { NextFn } from "@adonisjs/core/types/http";
  * This must be called after the auth middleware to ensure there is a user to check
  */
 export default class AccountAccessMiddleware {
-  async handle({ auth, params }: HttpContext, next: NextFn) {
+  async handle({ auth, params, response }: HttpContext, next: NextFn) {
     // Get the accountId param and ensure the current user has access to it
     const { accountId } = await accountIdParamsValidator.validate(params);
     const user = auth.getUserOrFail();
     if (user.accountId !== accountId) {
-      throw new errors.E_UNAUTHORIZED_ACCESS("Unauthorized access", {
-        guardDriverName: "AccountAccess",
-      });
+      return response.forbidden();
     }
 
     // This passed, so continue with the middleware chain

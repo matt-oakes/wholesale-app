@@ -52,7 +52,7 @@ test.group("accounts/show", () => {
     });
 
     // Should be denied
-    response.assertUnauthorized();
+    response.assertForbidden();
   });
 
   test("success if valid token provided", async ({ client, expect }) => {

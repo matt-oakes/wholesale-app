@@ -49,7 +49,7 @@ test.group("products/index", () => {
       .get(`/accounts/${account2.id}/products`)
       .headers({ Authorization: `Bearer ${account1UserTokenString}` });
 
-    response.assertUnauthorized();
+    response.assertForbidden();
   });
 
   test("empty array when there are no products for the account", async ({

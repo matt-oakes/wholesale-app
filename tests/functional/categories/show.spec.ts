@@ -47,7 +47,7 @@ test.group("categories/show", () => {
       .get(`/accounts/${account2.id}/categories/${category2.id}`)
       .headers({ Authorization: `Bearer ${account1UserTokenString}` });
 
-    response.assertUnauthorized();
+    response.assertForbidden();
   });
 
   test("error when the requested category id doesn't exist on the given account", async ({

@@ -10,7 +10,6 @@ import { DateTime } from "luxon";
 import Account from "./account.js";
 import Customer from "./customer.js";
 import OrderLineItem from "./order_line_item.js";
-import User from "./user.js";
 
 export default class Order extends BaseModel {
   @column({ isPrimary: true })
@@ -56,22 +55,7 @@ export default class Order extends BaseModel {
    * Static
    */
 
-  static visibleTo = scope((query, user: User) => {
-    switch (user.accountRole) {
-      case "manager":
-        // Managers can see all orders in the account
-        query.where("accountId", user.accountId);
-        break;
-      case "customer":
-        // Customers can only see their own orders
-        query
-          .where("accountId", user.accountId)
-          .where("customerId", user.customerId!);
-        break;
-      default:
-        throw new Error(
-          `visibleTo not implemented for this user account rule (${user.accountRole})`,
-        );
-    }
+  static partOfAccount = scope((query, accountId: string) => {
+    query.where("accountId", accountId);
   });
 }
