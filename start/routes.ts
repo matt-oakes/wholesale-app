@@ -13,6 +13,7 @@ import { middleware } from "./kernel.js";
 const AuthController = () => import("#controllers/auth_controller");
 const AccountsController = () => import("#controllers/accounts_controller");
 const CategoriesController = () => import("#controllers/categories_controller");
+const CustomersController = () => import("#controllers/customers_controller");
 const OrdersController = () => import("#controllers/orders_controller");
 const ProductsController = () => import("#controllers/products_controller");
 
@@ -44,9 +45,15 @@ router
       })
       .prefix("categories");
 
+    // Customers routes
+    router
+      .group(() => {
+        router.get("", [CustomersController, "index"]);
+        router.get("/:customerId", [CustomersController, "show"]);
+      })
+      .prefix("customers");
+
     // Orders routes
-    // TODO: Implement
-    // TODO: Functional tests
     router
       .group(() => {
         router.get("", [OrdersController, "index"]);

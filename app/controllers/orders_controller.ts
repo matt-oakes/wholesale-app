@@ -1,5 +1,4 @@
 import Order from "#models/order";
-import OrderPolicy from "#policies/order_policy";
 import { accountIdParamsValidator } from "#validators/account_id";
 import { customerIdOptionalValidator } from "#validators/customer_id";
 import { orderIdParamsValidator } from "#validators/order_id";
@@ -15,9 +14,9 @@ export default class OrdersController {
     );
 
     if (customerId) {
-      await bouncer.with(OrderPolicy).authorize("listCustomer", customerId);
+      await bouncer.with("OrderPolicy").authorize("listCustomer", customerId);
     } else {
-      await bouncer.with(OrderPolicy).authorize("listAll");
+      await bouncer.with("OrderPolicy").authorize("listAll");
     }
 
     const { accountId } = await accountIdParamsValidator.validate(params);
@@ -45,7 +44,7 @@ export default class OrdersController {
     if (!order) {
       return response.notFound();
     }
-    await bouncer.with(OrderPolicy).authorize("showOrder", order);
+    await bouncer.with("OrderPolicy").authorize("showOrder", order);
 
     return { order };
   }

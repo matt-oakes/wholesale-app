@@ -1,4 +1,10 @@
-import { BaseModel, belongsTo, column, hasMany } from "@adonisjs/lucid/orm";
+import {
+  BaseModel,
+  belongsTo,
+  column,
+  hasMany,
+  scope,
+} from "@adonisjs/lucid/orm";
 import type { BelongsTo, HasMany } from "@adonisjs/lucid/types/relations";
 import { DateTime } from "luxon";
 import Account from "./account.js";
@@ -35,4 +41,12 @@ export default class Customer extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime;
+
+  /**
+   * Static
+   */
+
+  static partOfAccount = scope((query, accountId: string) => {
+    query.where("accountId", accountId);
+  });
 }
