@@ -4,9 +4,9 @@ import { compose } from "@adonisjs/core/helpers";
 import hash from "@adonisjs/core/services/hash";
 import { BaseModel, belongsTo, column, computed } from "@adonisjs/lucid/orm";
 import type { BelongsTo } from "@adonisjs/lucid/types/relations";
-import { DateTime } from "luxon";
-import Account from "./account.js";
 import Customer from "./customer.js";
+import { PartOfAccount } from "./mixins/part_of_account.js";
+import { WithTimestamps } from "./mixins/with_timestamps.js";
 
 const AuthFinder = withAuthFinder(() => hash.use("scrypt"), {
   uids: ["email"],
@@ -15,7 +15,12 @@ const AuthFinder = withAuthFinder(() => hash.use("scrypt"), {
 
 export type AccountRole = "customer" | "manager";
 
-export default class User extends compose(BaseModel, AuthFinder) {
+export default class User extends compose(
+  BaseModel,
+  AuthFinder,
+  WithTimestamps,
+  PartOfAccount,
+) {
   @column({ isPrimary: true })
   declare id: string;
 
@@ -36,11 +41,6 @@ export default class User extends compose(BaseModel, AuthFinder) {
    */
 
   @column()
-  declare accountId: string;
-  @belongsTo(() => Account)
-  declare account: BelongsTo<typeof Account>;
-
-  @column()
   declare customerId: string | null;
   @belongsTo(() => Customer)
   declare customer: BelongsTo<typeof Customer>;
@@ -53,16 +53,6 @@ export default class User extends compose(BaseModel, AuthFinder) {
   get accountRole(): AccountRole {
     return this.customerId ? "customer" : "manager";
   }
-
-  /**
-   * Meta
-   */
-
-  @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime;
-
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime | null;
 
   /**
    * Static

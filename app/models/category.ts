@@ -1,16 +1,15 @@
-import {
-  BaseModel,
-  belongsTo,
-  column,
-  manyToMany,
-  scope,
-} from "@adonisjs/lucid/orm";
-import type { BelongsTo, ManyToMany } from "@adonisjs/lucid/types/relations";
-import { DateTime } from "luxon";
-import Account from "./account.js";
+import { compose } from "@adonisjs/core/helpers";
+import { BaseModel, column, manyToMany } from "@adonisjs/lucid/orm";
+import type { ManyToMany } from "@adonisjs/lucid/types/relations";
+import { PartOfAccount } from "./mixins/part_of_account.js";
+import { WithTimestamps } from "./mixins/with_timestamps.js";
 import Product from "./product.js";
 
-export default class Category extends BaseModel {
+export default class Category extends compose(
+  BaseModel,
+  WithTimestamps,
+  PartOfAccount,
+) {
   @column({ isPrimary: true })
   declare id: string;
 
@@ -24,29 +23,6 @@ export default class Category extends BaseModel {
    * Relations
    */
 
-  @column()
-  declare accountId: string;
-  @belongsTo(() => Account)
-  declare account: BelongsTo<typeof Account>;
-
   @manyToMany(() => Product)
   declare products: ManyToMany<typeof Product>;
-
-  /**
-   * Meta
-   */
-
-  @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime;
-
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime;
-
-  /**
-   * Static
-   */
-
-  static partOfAccount = scope((query, accountId: string) => {
-    query.where("accountId", accountId);
-  });
 }

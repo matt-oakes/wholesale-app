@@ -1,13 +1,14 @@
+import { compose } from "@adonisjs/core/helpers";
 import { BaseModel, column, hasMany } from "@adonisjs/lucid/orm";
 import type { HasMany } from "@adonisjs/lucid/types/relations";
-import { DateTime } from "luxon";
 import Category from "./category.js";
 import Customer from "./customer.js";
+import { WithTimestamps } from "./mixins/with_timestamps.js";
 import Order from "./order.js";
 import Product from "./product.js";
 import User from "./user.js";
 
-export default class Account extends BaseModel {
+export default class Account extends compose(BaseModel, WithTimestamps) {
   @column({ isPrimary: true })
   declare id: string;
 
@@ -35,14 +36,4 @@ export default class Account extends BaseModel {
 
   @hasMany(() => User)
   declare users: HasMany<typeof User>;
-
-  /**
-   * Meta
-   */
-
-  @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime;
-
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime;
 }
